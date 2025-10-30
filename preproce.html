@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preprocesamiento - Visión Artificial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at top, #1e293b 0%, #0a0e27 50%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -150px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(100px, -100px) rotate(120deg); }
+            66% { transform: translate(-50px, 50px) rotate(240deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .content-wrapper {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tema-titulo {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0.3) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tema-titulo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .tema-titulo h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: #e2e8f0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tema-titulo p {
+            font-size: 1.2rem;
+            color: #a78bfa;
+            font-weight: 600;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+        }
+
+        .section h3 {
+            color: #a78bfa;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-container {
+            background: #0f172a;
+            border-radius: 15px;
+            padding: 25px;
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .code-container::before {
+            content: 'Python';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .code-container pre {
+            margin: 0;
+            color: #e2e8f0;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .code-container code {
+            display: block;
+        }
+
+        .keyword { color: #c792ea; font-weight: 600; }
+        .function { color: #82aaff; }
+        .string { color: #c3e88d; }
+        .comment { color: #546e7a; }
+        .number { color: #f78c6c; }
+        .operator { color: #89ddff; }
+
+        .glosario-item {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid #8b5cf6;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .glosario-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.5);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .glosario-item h4 {
+            color: #a78bfa;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glosario-item h4::before {
+            content: '▸';
+            color: #8b5cf6;
+            font-size: 1.2rem;
+        }
+
+        .glosario-item p {
+            color: #cbd5e1;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 12px;
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .back-button:hover {
+            background: rgba(139, 92, 246, 0.3);
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .back-button::before {
+            content: '←';
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 30px 20px;
+            }
+
+            .tema-titulo {
+                padding: 25px 20px;
+            }
+
+            .section {
+                padding: 25px 20px;
+            }
+
+            .section h3 {
+                font-size: 1.5rem;
+            }
+
+            .glosario-item {
+                padding: 20px;
+            }
+
+            .code-container {
+                padding: 20px 15px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="badge">🎓 Especialidad de IA del CBTIS 144</div>
+            <h1>Realizado por: NOE DE JESUS GONZALEZ ESPINOSA</h1>
+            <p>Visión Artificial con Python</p>
+        </div>
+
+        <div class="content-wrapper">
+            <a href="index.html" class="back-button">Volver al catálogo</a>
+
+            <div class="tema-titulo">
+                <h2>Tema 9: Preprocesamiento</h2>
+                <p>⚙️ MENÚ INTERACTIVO DE PROCESAMIENTO</p>
+            </div>
+
+            <div class="section">
+                <h3>📝 Código del Ejemplo</h3>
+                <p style="color: #94a3b8; margin-bottom: 20px;">
+                    Sistema de menú interactivo que permite seleccionar diferentes operaciones de procesamiento 
+                    de imágenes: recortar, girar, zoom y salir.
+                </p>
+                <div class="code-container">
+                    <pre><code><span class="keyword">import</span> cv2
+<span class="keyword">from</span> cordenadas <span class="keyword">import</span> recortes
+<span class="keyword">from</span> MOVIMIENTO <span class="keyword">import</span> movimiento
+<span class="keyword">from</span> ZOOM_IMG <span class="keyword">import</span> zoom
+
+<span class="keyword">while</span> <span class="keyword">True</span>:
+    opcion <span class="operator">=</span> <span class="function">int</span>(<span class="function">input</span>(<span class="string">"PROCESAMIENTO DE IMAGENES\n 1.recortar\n 2. girar\n 3.zoom\n 4.salir \n seleccionar una opcion"</span>))
+    
+    <span class="keyword">if</span> opcion <span class="operator">==</span> <span class="number">1</span>:
+        <span class="function">print</span>(<span class="string">"ejecuta el archivo coordenadas"</span>)
+        <span class="function">recortes</span>()
+    
+    <span class="keyword">elif</span> opcion <span class="operator">==</span> <span class="number">2</span>:
+        <span class="function">print</span>(<span class="string">"ejecuta el archivo movimiento"</span>)
+        <span class="function">movimiento</span>()
+    
+    <span class="keyword">elif</span> opcion <span class="operator">==</span> <span class="number">3</span>:
+        <span class="function">print</span>(<span class="string">"ejecuta el archivo zoom"</span>)
+        <span class="function">zoom</span>()
+    
+    <span class="keyword">elif</span> opcion <span class="operator">==</span> <span class="number">4</span>:
+        <span class="function">print</span>(<span class="string">"ejecuta el salir"</span>)
+        <span class="keyword">break</span></code></pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📚 Glosario de Funciones</h3>
+
+                <div class="glosario-item">
+                    <h4>import</h4>
+                    <p>
+                        Sirve para traer módulos o librerías externas al programa, de modo que puedas usar funciones, 
+                        clases y variables que no están definidas en tu código. Es la forma de reutilizar código 
+                        ya existente en tus programas.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>break</h4>
+                    <p>
+                        Se usa para interrumpir o salir inmediatamente de un bucle (for o while), sin esperar 
+                        a que termine de forma natural. Es útil para detener la ejecución cuando se cumple 
+                        una condición específica.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
