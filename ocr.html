@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abrir Imagen - Visión Artificial</title>
+    <title>OCR - Sistema de Placas Múltiples</title>
     <style>
         * {
             margin: 0;
@@ -316,6 +316,99 @@
             font-size: 1.2rem;
         }
 
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .info-box h4 {
+            color: #60a5fa;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .info-box p {
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        .placas-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .placa-item {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4ade80;
+        }
+
+        .warning-box {
+            background: rgba(234, 179, 8, 0.1);
+            border-left: 4px solid #eab308;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
+        .warning-box h4 {
+            color: #fcd34d;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .warning-box h4::before {
+            content: '⚠️';
+        }
+
+        .warning-box p {
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        .success-box {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid #22c55e;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .success-box h4 {
+            color: #4ade80;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-box h4::before {
+            content: '✅';
+        }
+
+        .success-box p {
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
         @media (max-width: 768px) {
             .content-wrapper {
                 padding: 30px 20px;
@@ -377,69 +470,225 @@
         <div class="header">
             <div class="badge">🎓 Especialidad de IA del CBTIS 144</div>
             <h1>Realizado por: NOE DE JESUS GONZALEZ ESPINOSA</h1>
-            <p>Visión Artificial con Python</p>
+            <p>Sistema de Reconocimiento de Placas con OCR - Análisis Múltiple</p>
         </div>
 
         <div class="content-wrapper">
-            <a href="index.html" class="back-button">Volver al catálogo</a>
+            <a href="#" class="back-button">Volver al catálogo</a>
 
             <div class="tema-titulo">
-                <h2>Tema 11: OCR</h2>
-                <p>💾 CARGA Y VISUALIZACIÓN DE IMÁGENES</p>
+                <h2>Sistema de Control de Estacionamiento Avanzado</h2>
+                <p>🚗 OCR - PROCESAMIENTO MÚLTIPLE DE PLACAS</p>
             </div>
 
             <div class="section">
-                <h3>📝 Código del Ejemplo</h3>
-                <p style="color: #94a3b8; margin-bottom: 20px;">
-                    Fundamentos de OpenCV: cómo cargar una imagen desde un archivo y mostrarla 
-                    en una ventana utilizando las funciones básicas de la librería.
-                </p>
+                <h3>🎯 Descripción del Sistema</h3>
+                <div class="info-box">
+                    <h4>¿Qué hace este sistema mejorado?</h4>
+                    <p>
+                        Este sistema avanzado procesa <strong>múltiples imágenes de placas vehiculares</strong> en un solo ciclo, 
+                        generando un reporte completo de todas las placas analizadas. Incluye validación contra placas autorizadas, 
+                        manejo de errores para imágenes no encontradas, y un resumen final con estadísticas de placas leídas y pendientes.
+                    </p>
+                </div>
+
+                <div class="success-box">
+                    <h4>Mejoras Principales</h4>
+                    <p>
+                        ✓ <strong>Procesamiento en lote</strong>: Analiza múltiples imágenes automáticamente<br>
+                        ✓ <strong>Control de errores</strong>: Maneja imágenes no encontradas sin detener el programa<br>
+                        ✓ <strong>Limpieza avanzada</strong>: Elimina espacios, saltos de línea y caracteres especiales<br>
+                        ✓ <strong>Reporte detallado</strong>: Muestra placas leídas y placas restantes por escanear<br>
+                        ✓ <strong>5 placas autorizadas</strong>: Incluye VHW573 además de las placas originales
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h4>🔐 Placas Autorizadas en el Sistema</h4>
+                    <div class="placas-list">
+                        <div class="placa-item">XYZ789</div>
+                        <div class="placa-item">DMB-123</div>
+                        <div class="placa-item">QWE987</div>
+                        <div class="placa-item">DLP876</div>
+                        <div class="placa-item">VHW573</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>💻 Código Completo del Sistema OCR Múltiple</h3>
                 <div class="code-container">
                     <pre><code><span class="keyword">import</span> cv2
+<span class="keyword">import</span> pytesseract
 
-<span class="comment"># Cargar una imagen</span>
-img <span class="operator">=</span> cv2.<span class="function">imread</span>(<span class="string">'gato.jpg'</span>)
+<span class="comment"># Ruta del ejecutable de Tesseract</span>
+pytesseract.pytesseract.tesseract_cmd <span class="operator">=</span> r<span class="string">"C:\Users\MATUTINO\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"</span>
 
-<span class="comment"># Mostrar la imagen en una ventana</span>
-cv2.<span class="function">imshow</span>(<span class="string">'Mi Imagen'</span>, img)
+<span class="comment"># Lista de placas autorizadas</span>
+placas_autorizadas <span class="operator">=</span> [<span class="string">'XYZ789'</span>, <span class="string">'DMB-123'</span>, <span class="string">'QWE987'</span>, <span class="string">'DLP876'</span>, <span class="string">'VHW573'</span>]
 
-<span class="comment"># Esperar hasta que el usuario presione una tecla</span>
-cv2.<span class="function">waitKey</span>(<span class="number">0</span>)
-cv2.<span class="function">destroyAllWindows</span>()</code></pre>
+<span class="comment"># Lista de imágenes a analizar</span>
+imagenes_placas <span class="operator">=</span> [<span class="string">"placa1.jpg"</span>, <span class="string">"placa3.png"</span>]
+
+<span class="comment"># Lista para guardar placas leídas</span>
+placas_leidas <span class="operator">=</span> []
+
+<span class="keyword">for</span> archivo <span class="keyword">in</span> imagenes_placas:
+    <span class="comment"># Cargar y procesar imagen</span>
+    placa <span class="operator">=</span> cv2.<span class="function">imread</span>(archivo)
+    <span class="keyword">if</span> placa <span class="keyword">is</span> <span class="keyword">None</span>:
+        <span class="function">print</span>(<span class="string">f"❌ No se pudo cargar la imagen: {archivo}"</span>)
+        <span class="keyword">continue</span>
+
+    placanue <span class="operator">=</span> cv2.<span class="function">resize</span>(placa, (<span class="number">1000</span>, <span class="number">400</span>))
+    placa_gris <span class="operator">=</span> cv2.<span class="function">cvtColor</span>(placanue, cv2.COLOR_BGR2GRAY)
+    placa_res <span class="operator">=</span> cv2.<span class="function">threshold</span>(placa_gris, <span class="number">120</span>, <span class="number">255</span>, cv2.THRESH_BINARY)[<span class="number">1</span>]
+
+    <span class="comment"># Leer texto con OCR</span>
+    texto_placa <span class="operator">=</span> pytesseract.<span class="function">image_to_string</span>(placa_res, lang<span class="operator">=</span><span class="string">"spa"</span>)
+
+    <span class="comment"># Limpiar texto</span>
+    texto_limpio <span class="operator">=</span> texto_placa.<span class="function">strip</span>().<span class="function">replace</span>(<span class="string">" "</span>, <span class="string">""</span>).<span class="function">replace</span>(<span class="string">"\n"</span>, <span class="string">""</span>).<span class="function">replace</span>(<span class="string">"_"</span>, <span class="string">""</span>)
+
+    <span class="function">print</span>(<span class="string">f"\n📷 Imagen: {archivo}"</span>)
+    <span class="function">print</span>(<span class="string">f"Texto detectado: {texto_limpio}"</span>)
+
+    <span class="keyword">if</span> texto_limpio <span class="keyword">in</span> placas_autorizadas:
+        <span class="function">print</span>(<span class="string">"✅ ACCESO PERMITIDO: placa autorizada"</span>)
+        placas_leidas.<span class="function">append</span>(texto_limpio)
+    <span class="keyword">else</span>:
+        <span class="function">print</span>(<span class="string">"❌ ACCESO DENEGADO: placa no autorizada"</span>)
+
+    cv2.<span class="function">imshow</span>(<span class="string">f"Placa analizada - {archivo}"</span>, placa_res)
+    cv2.<span class="function">waitKey</span>(<span class="number">0</span>)
+
+cv2.<span class="function">destroyAllWindows</span>()
+
+<span class="function">print</span>(<span class="string">"\n----- RESULTADOS -----"</span>)
+<span class="function">print</span>(<span class="string">f"Placas leídas: {placas_leidas}"</span>)
+
+placas_restantes <span class="operator">=</span> [p <span class="keyword">for</span> p <span class="keyword">in</span> placas_autorizadas <span class="keyword">if</span> p <span class="keyword">not in</span> placas_leidas]
+<span class="function">print</span>(<span class="string">f"Placas restantes (no escaneadas): {placas_restantes}"</span>)</code></pre>
                 </div>
             </div>
 
             <div class="section">
-                <h3>📚 Glosario de Funciones</h3>
-
-                <div class="glosario-item">
-                    <h4>pytesseract()</h4>
-                    <p>se usa para reconocer texto dentro de imágenes, es decir, para hacer OCR (Optical Character Recognition
-                    </p>
+                <h3>🔄 Flujo del Proceso Múltiple</h3>
+                <div class="info-box">
+                    <h4>Paso 1: Inicialización</h4>
+                    <p>Se configuran las placas autorizadas (5 en total), las imágenes a procesar y una lista vacía para almacenar las placas leídas exitosamente.</p>
                 </div>
 
-                <div class="glosario-item">
-                    <h4>threshold()</h4>
-                    <p>
-                        sirve para convertir una imagen en blanco y negro (binaria) dependiendo del brillo de los píxeles.
-                    </p>
+                <div class="info-box">
+                    <h4>Paso 2: Ciclo For - Procesamiento Iterativo</h4>
+                    <p>El programa itera sobre cada imagen en la lista <code>imagenes_placas</code>, procesando cada una de forma secuencial.</p>
                 </div>
 
-                <div class="glosario-item">
-                    <h4>upper()</h4>
-                    <p>
-                        se usa para convertir todo un texto (cadena) a mayúsculas.
-                    </p>
+                <div class="warning-box">
+                    <h4>Paso 3: Validación de Carga</h4>
+                    <p>Antes de procesar, verifica si la imagen existe. Si <code>imread()</code> retorna <code>None</code>, muestra un error y continúa con la siguiente imagen usando <code>continue</code>.</p>
                 </div>
 
-                <div class="glosario-item">
-                    <h4>image_to_string()</h4>
-                    <p>sirve para extraer texto de una imagen y convertirlo en una cadena (string).
-                    </p>
+                <div class="info-box">
+                    <h4>Paso 4: Preprocesamiento de Imagen</h4>
+                    <p>Cada imagen válida pasa por: redimensionamiento (1000x400), conversión a escala de grises, y binarización con threshold.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Paso 5: Extracción y Limpieza de Texto</h4>
+                    <p>Tesseract extrae el texto, luego se eliminan espacios, saltos de línea (<code>\n</code>) y guiones bajos para normalizar el formato.</p>
+                </div>
+
+                <div class="success-box">
+                    <h4>Paso 6: Validación y Registro</h4>
+                    <p>Si la placa limpia está en <code>placas_autorizadas</code>, se agrega a <code>placas_leidas</code> usando <code>append()</code>.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Paso 7: Reporte Final</h4>
+                    <p>Al terminar el ciclo, se genera un reporte con las placas leídas y las placas restantes (usando list comprehension).</p>
                 </div>
             </div>
-        </div>
-    </div>
-</body>
 
-</html>
+            <div class="section">
+                <h3>📊 Ejemplo de Salida del Programa</h3>
+                <div class="code-container">
+                    <pre><code><span class="comment"># Salida esperada en consola:</span>
+
+<span class="string">📷 Imagen: placa1.jpg</span>
+<span class="string">Texto detectado: XYZ789</span>
+<span class="string">✅ ACCESO PERMITIDO: placa autorizada</span>
+
+<span class="string">📷 Imagen: placa3.png</span>
+<span class="string">Texto detectado: ABC123</span>
+<span class="string">❌ ACCESO DENEGADO: placa no autorizada</span>
+
+<span class="string">----- RESULTADOS -----</span>
+<span class="string">Placas leídas: ['XYZ789']</span>
+<span class="string">Placas restantes (no escaneadas): ['DMB-123', 'QWE987', 'DLP876', 'VHW573']</span></code></pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📚 Glosario de Funciones Nuevas y Avanzadas</h3>
+
+                <div class="glosario-item">
+                    <h4>for ... in ...</h4>
+                    <p>
+                        Estructura de control que itera sobre cada elemento de una lista (o cualquier iterable). En este caso, 
+                        procesa cada nombre de archivo en <code>imagenes_placas</code> uno por uno.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>is None</h4>
+                    <p>
+                        Operador de comparación que verifica si una variable tiene el valor especial <code>None</code> (nulo en Python). 
+                        Se usa para detectar errores cuando <code>imread()</code> no puede cargar una imagen.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>continue</h4>
+                    <p>
+                        Palabra clave que salta inmediatamente a la siguiente iteración del ciclo, omitiendo todo el código restante 
+                        en la iteración actual. Útil para manejar errores sin detener el programa completo.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>append()</h4>
+                    <p>
+                        Método de listas que agrega un elemento al final de la lista. En este código, añade las placas autorizadas 
+                        detectadas a la lista <code>placas_leidas</code> para generar el reporte final.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>replace()</h4>
+                    <p>
+                        Método de cadenas que reemplaza todas las ocurrencias de un substring por otro. Se usa encadenado tres veces 
+                        para eliminar espacios, saltos de línea (<code>\n</code>) y guiones bajos del texto OCR.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>f-strings (f"...")</h4>
+                    <p>
+                        Formato moderno de cadenas en Python que permite insertar variables directamente usando <code>{variable}</code>. 
+                        Ejemplo: <code>f"Imagen: {archivo}"</code> reemplaza <code>{archivo}</code> con el nombre del archivo actual.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>List Comprehension</h4>
+                    <p>
+                        Sintaxis compacta para crear listas: <code>[expresión for item in lista if condición]</code>. 
+                        Se usa para generar <code>placas_restantes</code> filtrando las placas que NO están en <code>placas_leidas</code>.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>not in</h4>
+                    <p>
+                        Operador booleano que verifica si
