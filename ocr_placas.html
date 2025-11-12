@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR - Sistema de Placas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at top, #1e293b 0%, #0a0e27 50%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -150px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(100px, -100px) rotate(120deg); }
+            66% { transform: translate(-50px, 50px) rotate(240deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .content-wrapper {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tema-titulo {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0.3) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tema-titulo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .tema-titulo h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: #e2e8f0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tema-titulo p {
+            font-size: 1.2rem;
+            color: #a78bfa;
+            font-weight: 600;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+        }
+
+        .section h3 {
+            color: #a78bfa;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-container {
+            background: #0f172a;
+            border-radius: 15px;
+            padding: 25px;
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .code-container::before {
+            content: 'Python';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .code-container pre {
+            margin: 0;
+            color: #e2e8f0;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .code-container code {
+            display: block;
+        }
+
+        .keyword { color: #c792ea; font-weight: 600; }
+        .function { color: #82aaff; }
+        .string { color: #c3e88d; }
+        .comment { color: #546e7a; }
+        .number { color: #f78c6c; }
+        .operator { color: #89ddff; }
+
+        .glosario-item {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid #8b5cf6;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .glosario-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.5);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .glosario-item h4 {
+            color: #a78bfa;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glosario-item h4::before {
+            content: '▸';
+            color: #8b5cf6;
+            font-size: 1.2rem;
+        }
+
+        .glosario-item p {
+            color: #cbd5e1;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 12px;
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .back-button:hover {
+            background: rgba(139, 92, 246, 0.3);
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .back-button::before {
+            content: '←';
+            font-size: 1.2rem;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .info-box h4 {
+            color: #60a5fa;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .info-box p {
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        .placas-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .placa-item {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4ade80;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 30px 20px;
+            }
+
+            .tema-titulo {
+                padding: 25px 20px;
+            }
+
+            .section {
+                padding: 25px 20px;
+            }
+
+            .section h3 {
+                font-size: 1.5rem;
+            }
+
+            .glosario-item {
+                padding: 20px;
+            }
+
+            .code-container {
+                padding: 20px 15px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="badge">🎓 Especialidad de IA del CBTIS 144</div>
+            <h1>Realizado por: NOE DE JESUS GONZALEZ ESPINOSA</h1>
+            <p>Sistema de Reconocimiento de Placas con OCR</p>
+        </div>
+
+        <div class="content-wrapper">
+            <a href="#" class="back-button">Volver al catálogo</a>
+
+            <div class="tema-titulo">
+                <h2>Sistema de Control de Estacionamiento</h2>
+                <p>🚗 OCR - RECONOCIMIENTO DE PLACAS</p>
+            </div>
+
+            <div class="section">
+                <h3>🎯 Descripción del Sistema</h3>
+                <div class="info-box">
+                    <h4>¿Qué hace este sistema?</h4>
+                    <p>
+                        Este sistema utiliza OCR (Reconocimiento Óptico de Caracteres) con Tesseract para leer placas vehiculares 
+                        desde imágenes y verificar si están autorizadas para ingresar al estacionamiento del CBTis 144. 
+                        El proceso incluye preprocesamiento de imagen, extracción de texto y validación contra una lista de placas autorizadas.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h4>🔐 Placas Autorizadas en el Sistema</h4>
+                    <div class="placas-list">
+                        <div class="placa-item">XYZ789</div>
+                        <div class="placa-item">DMB-123</div>
+                        <div class="placa-item">QWE987</div>
+                        <div class="placa-item">DLP876</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>💻 Código Completo del Sistema OCR</h3>
+                <div class="code-container">
+                    <pre><code><span class="keyword">import</span> cv2
+<span class="keyword">import</span> pytesseract
+
+<span class="comment"># Configurar ruta de Tesseract</span>
+pytesseract.pytesseract.tesseract_cmd<span class="operator">=</span>r<span class="string">"C:\Users\MATUTINO\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"</span>
+
+<span class="comment"># Lista de placas aceptadas en el estacionamiento del CBTis144</span>
+placas_autorizadas<span class="operator">=</span>[<span class="string">'XYZ789'</span>,<span class="string">'DMB-123'</span>,<span class="string">'QWE987'</span>,<span class="string">'DLP876'</span>]
+
+<span class="comment"># Cargar placa al leer</span>
+placa<span class="operator">=</span>cv2.<span class="function">imread</span>(<span class="string">"placa1.jpg"</span>)
+placanue<span class="operator">=</span>cv2.<span class="function">resize</span>(placa,(<span class="number">1000</span>,<span class="number">400</span>))
+
+<span class="comment"># Convertir a escala de grises</span>
+placa_gris<span class="operator">=</span>cv2.<span class="function">cvtColor</span>(placanue,cv2.COLOR_BGR2GRAY)
+
+<span class="comment"># Separamos el fondo con el texto (binarización)</span>
+placa_res<span class="operator">=</span>cv2.<span class="function">threshold</span>(placa_gris,<span class="number">120</span>,<span class="number">255</span>,cv2.THRESH_BINARY)[<span class="number">1</span>]
+
+<span class="comment"># Configurar OCR</span>
+texto_placa<span class="operator">=</span>pytesseract.<span class="function">image_to_string</span>(placa_res, lang<span class="operator">=</span><span class="string">"spa"</span>)
+
+<span class="comment"># Limpiar la cadena de texto</span>
+texto_limpio<span class="operator">=</span>texto_placa.<span class="function">strip</span>().<span class="function">replace</span>(<span class="string">" "</span>,<span class="string">"_"</span>)
+
+<span class="comment"># Buscar la placa en la lista autorizada</span>
+<span class="keyword">if</span> texto_limpio <span class="keyword">in</span> placas_autorizadas:
+    <span class="function">print</span>(<span class="string">"ACCESO PERMITIDO!!,\n Bienvenido al estacionamiento del CBTis 144"</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"ACCESO DENEGADO - Placa no autorizada"</span>)
+
+<span class="comment"># Imprimimos el texto detectado</span>
+<span class="function">print</span>(<span class="string">"Texto detectado:"</span>)
+<span class="function">print</span>(texto_placa)
+
+<span class="comment"># Mostrar imagen procesada</span>
+cv2.<span class="function">imshow</span>(<span class="string">"Imagen analizada"</span>,placa_res)
+cv2.<span class="function">waitKey</span>(<span class="number">0</span>)
+cv2.<span class="function">destroyAllWindows</span>()</code></pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>🔄 Flujo del Proceso</h3>
+                <div class="info-box">
+                    <h4>Paso 1: Carga y Redimensionamiento</h4>
+                    <p>Se carga la imagen de la placa y se redimensiona a 1000x400 píxeles para optimizar el procesamiento.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Paso 2: Conversión a Escala de Grises</h4>
+                    <p>La imagen se convierte a escala de grises para simplificar el análisis y mejorar la detección de texto.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Paso 3: Binarización</h4>
+                    <p>Se aplica un umbral (threshold) de 120 para separar el texto del fondo, creando una imagen binaria (blanco y negro).</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Paso 4: Extracción de Texto (OCR)</h4>
+                    <p>Tesseract analiza la imagen binaria y extrae el texto de la placa vehicular.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Paso 5: Validación</h4>
+                    <p>El texto limpio se compara con la lista de placas autorizadas para permitir o denegar el acceso.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📚 Glosario de Librerías y Funciones</h3>
+
+                <div class="glosario-item">
+                    <h4>cv2 (OpenCV)</h4>
+                    <p>
+                        Librería de visión por computadora que permite procesar y manipular imágenes. Se usa para leer, 
+                        redimensionar, convertir colores y aplicar operaciones de procesamiento de imagen.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>pytesseract</h4>
+                    <p>
+                        Wrapper de Python para Tesseract OCR, una herramienta de código abierto que extrae texto de imágenes. 
+                        Es muy preciso para reconocer texto impreso, incluidas placas vehiculares.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>cv2.imread()</h4>
+                    <p>
+                        Lee una imagen desde un archivo y la carga en memoria como un array de NumPy. 
+                        La imagen se carga por defecto en formato BGR (Blue, Green, Red).
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>cv2.resize()</h4>
+                    <p>
+                        Cambia el tamaño de una imagen a las dimensiones especificadas. Se usa para estandarizar 
+                        el tamaño de las imágenes antes del procesamiento OCR.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>cv2.cvtColor()</h4>
+                    <p>
+                        Convierte una imagen de un espacio de color a otro. En este caso, convierte de BGR a escala 
+                        de grises (GRAY) para simplificar el procesamiento.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>cv2.threshold()</h4>
+                    <p>
+                        Aplica binarización a una imagen en escala de grises. Los píxeles por debajo del umbral (120) 
+                        se vuelven negros y los superiores se vuelven blancos. Esto separa el texto del fondo.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>pytesseract.image_to_string()</h4>
+                    <p>
+                        Función principal de OCR que analiza una imagen y extrae todo el texto detectado como una cadena. 
+                        El parámetro 'lang' especifica el idioma para mejorar la precisión.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>strip()</h4>
+                    <p>
+                        Elimina espacios en blanco, saltos de línea y tabulaciones al inicio y final de una cadena. 
+                        Limpia el texto extraído por OCR.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>replace()</h4>
+                    <p>
+                        Reemplaza todas las ocurrencias de un carácter o subcadena por otro. Se usa para normalizar 
+                        el formato de las placas (espacios por guiones bajos).
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>cv2.imshow()</h4>
+                    <p>
+                        Muestra una imagen en una ventana. Se usa para visualizar el resultado del procesamiento 
+                        de la imagen antes de extraer el texto.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>cv2.waitKey()</h4>
+                    <p>
+                        Espera a que el usuario presione una tecla. Con el argumento 0, espera indefinidamente. 
+                        Mantiene la ventana de imagen abierta hasta que se presione una tecla.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>cv2.destroyAllWindows()</h4>
+                    <p>
+                        Cierra todas las ventanas de OpenCV abiertas. Se usa para limpiar y liberar recursos 
+                        después de mostrar las imágenes.
+                    </p>
+                </div>
+
+                <div class="glosario-item">
+                    <h4>in (operador)</h4>
+                    <p>
+                        Verifica si un elemento está presente en una lista, tupla, conjunto o cadena. 
+                        Retorna True si el elemento existe, False en caso contrario.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>⚙️ Requisitos de Instalación</h3>
+                <div class="code-container">
+                    <pre><code><span class="comment"># Instalar librerías de Python</span>
+pip install opencv-python
+pip install pytesseract
+
+<span class="comment"># Descargar e instalar Tesseract OCR</span>
+<span class="comment"># Windows: https://github.com/UB-Mannheim/tesseract/wiki</span>
+<span class="comment"># Linux: sudo apt-get install tesseract-ocr</span>
+<span class="comment"># Mac: brew install tesseract</span></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
